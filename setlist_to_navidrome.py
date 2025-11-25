@@ -1,14 +1,3 @@
-Jobb för att dynamiskt skapa spellistor i Navidrome från setlist.fm. Skapat med hjälp av ChatGPT.
-
-Info från ChatGPT:
-
-# Script: skapa Navidrome-spellistor från setlist.fm
-
-Nedanstående Python-script hämtar en setlist från **setlist.fm** (via deras API), söker upp motsvarande låtar i din Navidrome-server via Subsonic/OpenSubsonic-kompatibla API:t och skapar en spellista. Scriptet använder token-baserad Subsonic-autentisering (salt + md5(token)) så det fungerar mot Navidrome som är Subsonic-kompatibel. ([api.setlist.fm][1])
-
-Spara som `setlist_to_navidrome.py`.
-
-```python
 #!/usr/bin/env python3
 """
 setlist_to_navidrome.py
@@ -187,30 +176,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-# Användning och viktiga noteringar
-
-* Skaffa en **setlist.fm API-nyckel** och sätt `SETLISTFM_API_KEY` i miljön. setlist.fm kräver `x-api-key` i headern. ([api.setlist.fm][1])
-* Sätt `NAV_BASE_URL`, `NAV_USERNAME` och `NAV_PASSWORD`. Scriptet använder Subsonic `t`+`s` token-scheme (md5(password+salt)). Detta är Subsonic-rekommendation för autentisering. ([subsonic.org][2])
-* Navidrome implementerar Subsonic/OpenSubsonic API; `createPlaylist` och `search3` bör fungera. Om din Navidrome-version saknar någon endpoint måste du kontrollera aktuell kompatibilitet. ([Navidrome][3])
-* Matchning av låtar är heuristisk: setlist.fm ger bara låtnamn (och ibland cover-info). Scriptet söker fritt i Navidrome; om flera versioner / live-taggar finns kan fel träff uppstå. För bättre resultat kan du:
-
-  * förbättra sökfrågan (inkludera artist, album eller år).
-  * använda fuzzy matching mot `title` och metadata från `getSong`/`getAlbum`.
-  * implementera en manuell val-/fallback-rutin för osäkra träffar.
-
-# Förslag för förbättringar (snabblista)
-
-* Byt enkel XML-parsing mot `xml.etree.ElementTree` fullt ut (redan delvis gjort) eller använd `f=json` (om din Navidrome stöder `f=json`) för enklare hantering.
-* Hantera paginering/sökträffar och ge användaren möjlighet att välja bland flera matchningar.
-* Lägg till en "dry-run" för att visa vilka låtar som skulle läggas till utan att skapa playlist.
-
-# Källor
-
-* setlist.fm API-dokumentation (endpoints, `x-api-key`, JSON): ([api.setlist.fm][1])
-* Subsonic API (auth, createPlaylist, search3): ([subsonic.org][2])
-* Navidrome Subsonic-kompatibilitet / dokumentation: ([Navidrome][3])
-
-
 
